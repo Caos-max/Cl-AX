@@ -1,0 +1,54 @@
+local player = game.Players.LocalPlayer
+local runService = game:GetService("RunService")
+
+-- Interface Mobile
+local ScreenGui = Instance.new("ScreenGui")
+local BotaoGod = Instance.new("TextButton")
+local UICorner = Instance.new("UICorner")
+
+ScreenGui.Parent = game.CoreGui
+BotaoGod.Parent = ScreenGui
+BotaoGod.Size = UDim2.new(0, 80, 0, 30)
+BotaoGod.Position = UDim2.new(0.12, 0, 0.12, 0)
+BotaoGod.Text = "GOD + PULO"
+BotaoGod.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+BotaoGod.TextColor3 = Color3.fromRGB(255, 255, 255)
+BotaoGod.Font = Enum.Font.SourceSansBold
+BotaoGod.TextSize = 10
+UICorner.Parent = BotaoGod
+
+local godAtivo = false
+runService.Stepped:Connect(function()
+    if godAtivo then
+        local char = player.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        
+        if hum then
+            -- MANTÉM VIVO
+            hum:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
+            if hum.Health < 0.1 then hum.Health = 1 end
+            
+            -- FORÇA O PULO A FUNCIONAR
+            hum.JumpPower = 50
+            hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+        end
+    end
+end)
+BotaoGod.MouseButton1Click:Connect(function()
+    godAtivo = not godAtivo
+    local char = player.Character
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    
+    if godAtivo then
+        BotaoGod.Text = "GOD: LIGADO"
+        BotaoGod.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+        
+        if hum then
+            hum:ChangeState(Enum.HumanoidStateType.GettingUp)
+        end
+    else
+        BotaoGod.Text = "GOD + PULO"
+        BotaoGod.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        if hum then hum:SetStateEnabled(Enum.HumanoidStateType.Dead, true) end
+    end
+end)
